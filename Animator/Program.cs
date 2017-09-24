@@ -125,6 +125,8 @@ namespace Animator
             Console.WriteLine("Creating POV " + fileName);
             string line;
             int onItem = -1;
+            int dumpUnions = 0;
+            bool ignoreLine;
             var sb = new StringBuilder();
             System.IO.StreamReader file = new System.IO.StreamReader(options.inPov);
             while ((line = file.ReadLine()) != null)
@@ -133,30 +135,50 @@ namespace Animator
                     line = "#declare ldd_model_transformation = transform { translate <2,1,1> }";
                 if (line.Equals("#declare ldd_model = union {"))
                     onItem = 0;
-                if ((onItem > -1) && (line.Equals("}")))
-                {
-                    if (options.degreeSpin != 0)
-                        sb.AppendLine("rotate <0,clock,0>");
-                    onItem = -1;
+                ignoreLine = false;
+                if (line.Trim().Equals("union {"))
+                { // it's an unnecessary union that LDD to POV-Ray made
+                    dumpUnions++;
+                    ignoreLine = true;
                 }
-                if (onItem > 0)
+                if (line.Equals("}"))
                 {
-                    // Find where this item appears in the ordered list
-                    int itemTiming = itemIds.FindIndex(a => a.Equals(onItem - 1));
-                    if (itemTiming == -1)
-                        break;
-                    sb.AppendLine("// Item " + onItem.ToString() + ", index " + itemTiming.ToString());
-                    if (options.degreeSpin != 0)
-                        sb.AppendLine("#if(clock >= " + (itemTiming * ((double)options.finishBuildDegree / itemIds.Count)).ToString() + ")");
-                    sb.AppendLine(line);
-                    sb.AppendLine("#end");
+                    if (onItem > -1)
+                    {
+                        if (dumpUnions > 0)
+                        {
+                            dumpUnions--;
+                            ignoreLine = true;
+                        }
+                        else
+                        {
+                            if (options.degreeSpin != 0)
+                                sb.AppendLine("rotate <0,clock,0>");
+                            onItem = -1;
+                        }
+                    }
                 }
-                else
+                if (!ignoreLine)
                 {
-                    sb.AppendLine(line);
+                    if (onItem > 0)
+                    {
+                        // Find where this item appears in the ordered list
+                        int itemTiming = itemIds.FindIndex(a => a.Equals(onItem - 1));
+                        if (itemTiming == -1)
+                            break;
+                        sb.AppendLine("// Item " + onItem.ToString() + ", index " + itemTiming.ToString());
+                        if (options.degreeSpin != 0)
+                            sb.AppendLine("#if(clock >= " + (itemTiming * ((double)options.finishBuildDegree / itemIds.Count)).ToString() + ")");
+                        sb.AppendLine(line);
+                        sb.AppendLine("#end");
+                    }
+                    else
+                    {
+                        sb.AppendLine(line);
+                    }
+                    if (onItem != -1)
+                        onItem++;
                 }
-                if (onItem != -1)
-                    onItem++;
             }
 
             file.Close();
