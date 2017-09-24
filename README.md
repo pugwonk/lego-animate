@@ -29,7 +29,7 @@ As you can see, using the LDD order is a bit more attractive but won't work well
 
 # Rotation
 
-My converter can ask POV-Ray to rotate the model while it's being built. This is done via the r and fb parameters (see #command line parameters).
+My converter can ask POV-Ray to rotate the model while it's being built. See [Command Line Options](#command-line-options) for more info.
 
 # Running It
 
@@ -42,7 +42,7 @@ This is my recommend sequence of steps.
 1. Load the LDD to POV-Ray converter and create a POV file from it. I'd recommend setting the level of detail on the "Model" screen to the second setting ("original LDD geometry + visible bevels") because rendering the "Lego" logos on all the bricks is very time consuming
 1. Do not close the LDD to POV-Ray converter. It has generated binary files that POV-Ray will need and needs to be kept running
 1. Prepare a very low-resolution, low-quality 200x100 animation in 50 frames by running `animate -i myfile.pov -q1 -w200 -h100 -f50`
-1. Open POV-Ray and load myfile-anim.ini. Hit "Run"
+1. Open POV-Ray and load `myfile-anim.ini`. Hit "Run"
    1. Make a pot of tea
 1. Flip through the various resulting PNG files. The renders will look horrible but don't worry - does the build order look decent?
 1. If it doesn't:
@@ -52,27 +52,55 @@ This is my recommend sequence of steps.
    1. Prepare a very low-resolution, low-quality 200x100 animation in 50 frames by running `animate -i myfile.pov -q1 -w200 -h100 -f50 instructions.blueprint`
    1. Render `myfile-anim.ini` in POV-Ray
    1. Does the build order look decent? If so, keep adding the blueprint file on the command line. If not, remove it (you may want to look at [Manually Editing Build Order](#manually-editing-build-order))
-1. If you do not want to rotate the model during animation, generate a lovely high-quality 100-frame render by running `animate -i myfile.pov -q1 -aa -w800 -h600 -f100 instructions.blueprint`
+1. If you do not want to rotate the model during animation, generate a lovely high-quality 100-frame render by running `animate -i myfile.pov -q1 -aa true -w800 -h600 -f100 instructions.blueprint`
    1. Make an entire jug of tea
-1. If you do want to rotate the model, generate a low-quality animation by running `animate myfile.pov -q1 -w200 -h100 -f50 instructions.blueprint -r720 -fb540`. This will rotate the model by 720 degrees during the build, and finish the actual building at 540 degrees
+1. If you do want to rotate the model, generate a low-quality animation by running `animate myfile.pov -q1 -w200 -h100 -f50 instructions.blueprint -r720 -e540`. This will rotate the model by 720 degrees during the build, and finish the actual building at 540 degrees
 1. Render this in POV-Ray. If the model twirls in an odd way on its axis, move it around a bit in LDD and go back to step ???
-1. If this looks good, generate a high quality 250 frame render by using something like `animate myfile.pov -q1 -w800 -h600 -f250 -r720 -aa -fb540 instructions.blueprint`
+1. If this looks good, generate a high quality 250 frame render by using something like `animate myfile.pov -q1 -w800 -h600 -f250 -r720 -aa true -e540 instructions.blueprint`
 1. Render this in POV-Ray
    1. Make tea for your entire neighbourhood and distribute it
 1. Once you're happy with the PNG files, combine them into a video. To do this using VirtualDub:
-   1. Download the XVID video codec, which seems to work best
+   1. Download and install the [XVID video codec](https://www.xvid.com/download/), which seems to work best
    1. Open VirtualDub
    1. Select File..Open Video File and choose the first frame of your render
    1. Select Video..Frame Rate and select a frame rate that will work (10fps isn't too bad - 25fps looks lovely but bear in mind your 250 frame video will last 10 seconds)
    1. Select Video..Compression and select Xvid MPEG-4 Codec
    1. Hit File..Save as AVI
 1. Impress your friends
-1. To make a truly gorgeous 4k 1000-frame version of your render, try `animate myfile.pov -q1 -w3840 -h2160 -f1000 -r720 -aa -fb540`
+1. To make a truly gorgeous 4k 1000-frame version of your render, try `animate myfile.pov -q1 -w3840 -h2160 -f1000 -r720 -aa true -e540`
    1. Buy a tea plantation and start growing tea plants on it
 
 # Command Line Options
 
+The following options are available (just run `animator` without any parameters to see this list):
+
+`
+  -i, --input         Required. Input POV file.
+
+  -b, --blueprint     Input BluePrint instruction file.
+
+  -w, --width         (Default: 320) Width of output images.
+
+  -h, --height        (Default: 200) Height of output images.
+
+  -f, --frames        (Default: 50) Number of frames to render.
+
+  -r, --rotate        (Default: 0) Number of degrees to rotate model during
+                      animation.
+
+  -e, --endbuildat    (Default: 0) Degrees of rotation at which to finish
+                      building.
+
+  -q, --quality       (Default: 9) POV-Ray quality setting to render at (1-9).
+
+  -a, --antialias     (Default: False) Whether to antialias resulting images.
+
+  --help              Display this help screen.
+`
+
 # Manually Editing Build Order
+
+I'd recommend against trying to do too much of this, but inside the `*-anim.pov` file you'll see listed all of the elements with their build order. You can muddle around with those #ifs to change the order things draw in.
 
 # Things That Might Go Wrong
 
