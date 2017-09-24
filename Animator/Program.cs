@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Data;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Animator
 {
@@ -27,6 +28,7 @@ namespace Animator
                 itemIds = loadBluePrintSteps(options);
             else
                 itemIds = loadPovSteps(options);
+            Console.WriteLine("- " + itemIds.Count().ToString() + " build steps");
             createPov(itemIds, options);
             createIni(options);
             deleteOldImages(options.inPov);
@@ -55,7 +57,7 @@ namespace Animator
 
         private static List<int> loadBluePrintSteps(Options options)
         {
-            Console.WriteLine("Loading steps from BluePrint " + options.inBluePrint);
+            Console.WriteLine("Loading steps from BluePrint " + options.inBluePrint + "...");
             string infile = File.ReadAllText(options.inBluePrint);
             JObject d = JObject.Parse(infile);
             List<int> ids = new List<int>();
@@ -66,8 +68,16 @@ namespace Animator
 
         private static List<int> loadPovSteps(Options options)
         {
-            Console.WriteLine("Loading steps from POV");
-            throw new NotImplementedException();
+            Console.WriteLine("Loading steps from POV...");
+            List<int> ids = new List<int>();
+            string infile = File.ReadAllText(options.inPov);
+            int items = Regex.Matches(infile, @"\nldd_[0-9]*\(").Count;
+            for (int i = 0; i < items; i++)
+            {
+                ids.Add(i);
+            }
+            return ids;
+
         }
 
         private static void doBluePrintSteps(JToken steps, List<int> ids)
