@@ -22,8 +22,11 @@ namespace Animator
             {
                 Environment.Exit(CommandLine.Parser.DefaultExitCodeFail);
             }
-            // Options were parsed fine
             List<int> itemIds;
+            if ((options.degreeSpin >0) && (options.finishBuildDegree == 0)) {
+                Console.WriteLine("If you specify a degree of rotation, you must also use -e to specify the degree number at which building should be finished.");
+                Environment.Exit(0);
+            }
             if (options.inBluePrint != null)
                 itemIds = loadBluePrintSteps(options);
             else
@@ -141,8 +144,8 @@ namespace Animator
             System.IO.StreamReader file = new System.IO.StreamReader(options.inPov);
             while ((line = file.ReadLine()) != null)
             {
-                if (line.Equals("#declare ldd_model_transformation = transform { translate <0,0,0> }"))
-                    line = "#declare ldd_model_transformation = transform { translate <2,1,1> }";
+                //if (line.Equals("#declare ldd_model_transformation = transform { translate <0,0,0> }"))
+                //    line = "#declare ldd_model_transformation = transform { translate <2,1,1> }";
                 if (line.Equals("#declare ldd_model = union {"))
                     onItem = 0;
                 ignoreLine = false;
@@ -179,6 +182,8 @@ namespace Animator
                         sb.AppendLine("// Item " + onItem.ToString() + ", index " + itemTiming.ToString());
                         if (options.degreeSpin != 0)
                             sb.AppendLine("#if(clock >= " + (itemTiming * ((double)options.finishBuildDegree / itemIds.Count)).ToString() + ")");
+                        else
+                            sb.AppendLine("#if(frame_number >= " + (itemTiming * ((double)options.frameCount / itemIds.Count)).ToString() + ")");
                         sb.AppendLine(line);
                         sb.AppendLine("#end");
                     }
