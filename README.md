@@ -100,8 +100,12 @@ The following options are available (just run `animator` without any parameters 
 
 # Manually Editing Build Order
 
-I'd recommend against trying to do too much of this, but inside the `*-anim.pov` file you'll see listed all of the elements with their build order. You can muddle around with those #ifs to change the order things draw in.
+This only applies where you're not using BluePrint to generate the build order. If you look inside the `.pov` file created by LDD to POV-Ray, you'll see a line reading `#declare ldd_model = union {` and then all of the elements in their build order. You can just move them around (and then rerun this program) to modify that order. Each element is named `ldd_something` where `something` is the ID of the brick being used. The easiest way to find out which is which is to load up LDD and search for that brick ID. I never said this was going to be easy. Remember not to run LDD to POV-Ray again though, as it will zap your carefully crafted changes.
+
+# Hints and Tips
+
+* If you're intending using the computer for other things at the same time as the rendering, in POV-Ray select Render..Render Priority and set it to Background. As otherwise the mouse stops moving every so often and it's rather annoying. It will still use 100% of CPU when it can.
 
 # Things That Might Go Wrong
 
-* If POV-Ray falls over on some sort of #include in the run.pov file, it's probably because you're not runing LDD to POV-Ray, or you haven't generated this exact model with it beforehand.
+* If POV-Ray falls over on some sort of #include, it's probably because you're not runing LDD to POV-Ray, or you haven't generated this exact model with it beforehand.
