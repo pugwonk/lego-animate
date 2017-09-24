@@ -14,45 +14,29 @@ namespace Animator
 {
     class Program
     {
-        // Order of operations:
-        // * Save LXF (zoomed nicely) in input/original.lxf
-        // * Run Blueprint, save as input/original.blueprint
-        // * Convert LDD to Pov-Ray as input/original.pov
-        // * Leave LDD running
-        // * Run this code
-        // * Delete *.png in output folder
-        // * Load output/main.ini in Pov-Ray
-        // * Convert to video in VirtualDub (get the XVID codec first and use that)
-
-        // Todo:
-        // * Fix (remove) the extra unions that LDD to Pov-Ray sometimes makes
-        // * #if the includes that aren't needed yet at this stage in the render
-        // * Make command line parameters
-        // * Make it comment each item number in the POV file
-        // * Change output filenames to myfile-anim.pov and myfile-anim.ini
-        // * Remove the code translating the model location
-        // * Embed template.ini in project
-
-        const int frameCount = 250;
-        const int degreeSpin = 720;
-        const int finishBuildDegree = 540;
-        //const int imgWidth = 512;
-        //const int imgHeight = 384;
-        const int imgWidth = 800;
-        const int imgHeight = 600;
-        const bool useAA = true;
-        const int quality = 9;
-
         static void Main(string[] args)
         {
-            List<int> itemIds = loadBluePrint();
-            int frames = createPov(itemIds, true);
-            createIni(frames);
+            var options = new Options();
+            if (!CommandLine.Parser.Default.ParseArguments(args, options))
+            {
+                Environment.Exit(CommandLine.Parser.DefaultExitCodeFail);
+            }
+            // Options were parsed fine
+            int frames;
+            if (options.inBluePrint != null)
+            {
+                List<int> itemIds = loadBluePrint(options);
+                frames = createPov(itemIds, options);
+            } else
+            {
+                frames = createPov(null, options);
+            }
+            createIni(frames, options);
         }
 
-        private static List<int> loadBluePrint()
+        private static List<int> loadBluePrint(Options options)
         {
-            string infile = File.ReadAllText("../../input/original.blueprint");
+            string infile = File.ReadAllText(options.inBluePrint);
             JObject d = JObject.Parse(infile);
             List<int> ids = new List<int>();
 
@@ -79,7 +63,7 @@ namespace Animator
             }
         }
 
-        private static void createIni(int frames)
+        private static void createIni(int frames, Options options)
         {
             // Create INI
             string line;
@@ -88,35 +72,35 @@ namespace Animator
             while ((line = file.ReadLine()) != null)
             {
                 if (line.Equals("Final_Frame="))
-                    line += frameCount.ToString();
+                    line += options.frameCount.ToString();
                 if (line.Equals("Final_Clock="))
-                    line += degreeSpin.ToString();
+                    line += options.degreeSpin.ToString();
                 if (line.Equals("Width="))
-                    line += imgWidth.ToString();
+                    line += options.imgWidth.ToString();
                 if (line.Equals("Height="))
-                    line += imgHeight.ToString();
+                    line += options.imgHeight.ToString();
                 if (line.Equals("Antialias="))
-                    line += (useAA ? "Yes" : "No");
+                    line += (options.useAA ? "Yes" : "No");
                 if (line.Equals("Quality="))
-                    line += quality.ToString();
+                    line += options.quality.ToString();
                 sb.AppendLine(line);
             }
 
             file.Close();
-            using (System.IO.StreamWriter files = new System.IO.StreamWriter("../../output/run.ini"))
+            using (System.IO.StreamWriter files = new System.IO.StreamWriter(options.inPov.ToLower().Replace(".pov", "-anim.ini")))
             {
                 files.WriteLine(sb.ToString());
             }
         }
 
-        private static int createPov(List<int> itemIds, bool useLDDorder)
+        private static int createPov(List<int> itemIds, Options options)
         {
             // Create POV
             string line;
             int onItem = -1;
             int lastItem = -1;
             var sb = new StringBuilder();
-            System.IO.StreamReader file = new System.IO.StreamReader("../../input/original.pov");
+            System.IO.StreamReader file = new System.IO.StreamReader(options.inPov);
             while ((line = file.ReadLine()) != null)
             {
                 if (line.Equals("#declare ldd_model_transformation = transform { translate <0,0,0> }"))
@@ -132,7 +116,7 @@ namespace Animator
                 {
                     // Find where this item appears in the ordered list
                     int itemTiming;
-                    if (useLDDorder)
+                    if (true)
                         itemTiming = onItem - 1;
                     else
                     {
@@ -140,7 +124,7 @@ namespace Animator
                         if (itemTiming == -1)
                             break;
                     }
-                    sb.AppendLine("#if(clock >= " + (itemTiming * ((double)finishBuildDegree/itemIds.Count)).ToString() + ")");
+                    sb.AppendLine("#if(clock >= " + (itemTiming * ((double)options.finishBuildDegree / itemIds.Count)).ToString() + ")");
                     sb.AppendLine(line);
                     sb.AppendLine("#end");
                     lastItem = onItem;
@@ -154,7 +138,7 @@ namespace Animator
             }
 
             file.Close();
-            using (System.IO.StreamWriter files = new System.IO.StreamWriter("../../output/run.pov"))
+            using (System.IO.StreamWriter files = new System.IO.StreamWriter(options.inPov.ToLower().Replace(".pov", "-anim.pov")))
             {
                 files.WriteLine(sb.ToString());
             }
