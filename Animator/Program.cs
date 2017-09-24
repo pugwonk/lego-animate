@@ -22,34 +22,58 @@ namespace Animator
                 Environment.Exit(CommandLine.Parser.DefaultExitCodeFail);
             }
             // Options were parsed fine
-            int frames;
+            List<int> itemIds;
             if (options.inBluePrint != null)
-            {
-                List<int> itemIds = loadBluePrint(options);
-                frames = createPov(itemIds, options);
-            } else
-            {
-                frames = createPov(null, options);
-            }
-            createIni(frames, options);
+                itemIds = loadBluePrintSteps(options);
+            else
+                itemIds = loadPovSteps(options);
+            createPov(itemIds, options);
+            createIni(options);
+            deleteOldImages(options.inPov);
+            Console.WriteLine();
+            Console.WriteLine("Done!");
+            Console.WriteLine("To run the animation, open '" + options.inPov.ToLower().Replace(".pov", "-anim.ini") + "' in POV-Ray. Don't forget to leave LDD to POV-Ray open.");
         }
 
-        private static List<int> loadBluePrint(Options options)
+        private static void deleteOldImages(string inPov)
         {
+            String povPath = Path.GetFullPath(inPov);
+            string povName = Path.GetFileName(povPath);
+            string povFolder = Path.GetDirectoryName(povPath);
+            var dir = new DirectoryInfo(povFolder);
+            string filesToGo = povName.ToLower().Replace(".pov", "-anim*.png");
+            var oldImages = dir.EnumerateFiles(filesToGo);
+            if (oldImages.Count() > 0)
+            {
+                Console.WriteLine("Deleting old output files " + filesToGo);
+                foreach (var file in oldImages)
+                {
+                    file.Delete();
+                }
+            }
+        }
+
+        private static List<int> loadBluePrintSteps(Options options)
+        {
+            Console.WriteLine("Loading steps from BluePrint " + options.inBluePrint);
             string infile = File.ReadAllText(options.inBluePrint);
             JObject d = JObject.Parse(infile);
             List<int> ids = new List<int>();
 
-            doSteps(d["model"]["steps"], ids);
+            doBluePrintSteps(d["model"]["steps"], ids);
             return ids;
         }
 
-        private static void doSteps(JToken steps, List<int> ids)
+        private static List<int> loadPovSteps(Options options)
+        {
+            Console.WriteLine("Loading steps from POV");
+            throw new NotImplementedException();
+        }
+
+        private static void doBluePrintSteps(JToken steps, List<int> ids)
         {
             foreach (JToken step in steps)
             {
-                //var b = steps["parts"];
-                //var x = steps["submodels"];
                 foreach (var part in step["parts"])
                 {
                     string pid = (string)part.SelectToken("id");
@@ -57,15 +81,15 @@ namespace Animator
                 }
                 foreach (var subm in step["submodels"])
                 {
-                    //var x = subm["isCallout"];
-                    doSteps(subm["steps"], ids);
+                    doBluePrintSteps(subm["steps"], ids);
                 }
             }
         }
 
-        private static void createIni(int frames, Options options)
+        private static void createIni(Options options)
         {
-            // Create INI
+            string fileName = options.inPov.ToLower().Replace(".pov", "-anim.ini");
+            Console.WriteLine("Creating INI " + fileName);
             string line;
             var sb = new StringBuilder();
             System.IO.StreamReader file = new System.IO.StreamReader("../../template.ini");
@@ -83,22 +107,24 @@ namespace Animator
                     line += (options.useAA ? "Yes" : "No");
                 if (line.Equals("Quality="))
                     line += options.quality.ToString();
+                if (line.Equals("Input_File_Name="))
+                    line += options.inPov.ToLower().Replace(".pov", "-anim.pov");
                 sb.AppendLine(line);
             }
 
             file.Close();
-            using (System.IO.StreamWriter files = new System.IO.StreamWriter(options.inPov.ToLower().Replace(".pov", "-anim.ini")))
+            using (System.IO.StreamWriter files = new System.IO.StreamWriter(fileName))
             {
                 files.WriteLine(sb.ToString());
             }
         }
 
-        private static int createPov(List<int> itemIds, Options options)
+        private static void createPov(List<int> itemIds, Options options)
         {
-            // Create POV
+            string fileName = options.inPov.ToLower().Replace(".pov", "-anim.pov");
+            Console.WriteLine("Creating POV " + fileName);
             string line;
             int onItem = -1;
-            int lastItem = -1;
             var sb = new StringBuilder();
             System.IO.StreamReader file = new System.IO.StreamReader(options.inPov);
             while ((line = file.ReadLine()) != null)
@@ -109,25 +135,21 @@ namespace Animator
                     onItem = 0;
                 if ((onItem > -1) && (line.Equals("}")))
                 {
-                    sb.AppendLine("rotate <0,clock,0>");
+                    if (options.degreeSpin != 0)
+                        sb.AppendLine("rotate <0,clock,0>");
                     onItem = -1;
                 }
                 if (onItem > 0)
                 {
                     // Find where this item appears in the ordered list
-                    int itemTiming;
-                    if (true)
-                        itemTiming = onItem - 1;
-                    else
-                    {
-                        itemTiming = itemIds.FindIndex(a => a.Equals(onItem - 1));
-                        if (itemTiming == -1)
-                            break;
-                    }
-                    sb.AppendLine("#if(clock >= " + (itemTiming * ((double)options.finishBuildDegree / itemIds.Count)).ToString() + ")");
+                    int itemTiming = itemIds.FindIndex(a => a.Equals(onItem - 1));
+                    if (itemTiming == -1)
+                        break;
+                    sb.AppendLine("// Item " + onItem.ToString() + ", index " + itemTiming.ToString());
+                    if (options.degreeSpin != 0)
+                        sb.AppendLine("#if(clock >= " + (itemTiming * ((double)options.finishBuildDegree / itemIds.Count)).ToString() + ")");
                     sb.AppendLine(line);
                     sb.AppendLine("#end");
-                    lastItem = onItem;
                 }
                 else
                 {
@@ -138,11 +160,10 @@ namespace Animator
             }
 
             file.Close();
-            using (System.IO.StreamWriter files = new System.IO.StreamWriter(options.inPov.ToLower().Replace(".pov", "-anim.pov")))
+            using (System.IO.StreamWriter files = new System.IO.StreamWriter(fileName))
             {
                 files.WriteLine(sb.ToString());
             }
-            return lastItem;
         }
     }
 }

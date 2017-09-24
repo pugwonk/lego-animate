@@ -30,11 +30,11 @@ namespace Animator
         HelpText = "Number of frames to render.")]
         public int frameCount { get; set; }
 
-        [Option('r', "rotate", Required = false, DefaultValue = 720,
+        [Option('r', "rotate", Required = false, DefaultValue = 0,
         HelpText = "Number of degrees to rotate model during animation.")]
         public int degreeSpin { get; set; }
 
-        [Option('e', "endbuildat", Required = false, DefaultValue = 540,
+        [Option('e', "endbuildat", Required = false, DefaultValue = 0,
         HelpText = "Degrees of rotation at which to finish building.")]
         public int finishBuildDegree { get; set; }
 
