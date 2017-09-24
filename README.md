@@ -74,7 +74,7 @@ This is my recommend sequence of steps.
 
 The following options are available (just run `animator` without any parameters to see this list):
 
-`
+```
   -i, --input         Required. Input POV file.
 
   -b, --blueprint     Input BluePrint instruction file.
@@ -96,7 +96,7 @@ The following options are available (just run `animator` without any parameters 
   -a, --antialias     (Default: False) Whether to antialias resulting images.
 
   --help              Display this help screen.
-`
+```
 
 # Manually Editing Build Order
 
