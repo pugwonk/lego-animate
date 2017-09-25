@@ -41,7 +41,7 @@ This is my recommend sequence of steps.
 1. Save the model and close LDD
 1. Load the LDD to POV-Ray converter and create a POV file from it. I'd recommend setting the level of detail on the "Model" screen to the second setting ("original LDD geometry + visible bevels") because rendering the "Lego" logos on all the bricks is very time consuming
 1. Do not close the LDD to POV-Ray converter. It has generated binary files that POV-Ray will need and needs to be kept running
-1. Prepare a very low-resolution, low-quality 200x100 animation in 50 frames by running `animate -i myfile.pov -q1 -w200 -h100 -f50`
+1. Prepare a very low-resolution, low-quality 200x100 animation in 50 frames by running `lego-animate -i myfile.pov -q1 -w200 -h100 -f50`
 1. Open POV-Ray and load `myfile-anim.ini`. Hit "Run"
    1. Make a pot of tea
 1. Flip through the various resulting PNG files. The renders will look horrible but don't worry - does the build order look decent?
@@ -49,14 +49,14 @@ This is my recommend sequence of steps.
    1. Run BluePrint
    1. Import your LXF file
    1. Save the resulting instructions
-   1. Prepare a very low-resolution, low-quality 200x100 animation in 50 frames by running `animate -i myfile.pov -q1 -w200 -h100 -f50 instructions.blueprint`
+   1. Prepare a very low-resolution, low-quality 200x100 animation in 50 frames by running `lego-animate -i myfile.pov -q1 -w200 -h100 -f50 instructions.blueprint`
    1. Render `myfile-anim.ini` in POV-Ray
    1. Does the build order look decent? If so, keep adding the blueprint file on the command line. If not, remove it (you may want to look at [Manually Editing Build Order](#manually-editing-build-order))
-1. If you do not want to rotate the model during animation, generate a lovely high-quality 100-frame render by running `animate -i myfile.pov -q1 -aa true -w800 -h600 -f100 instructions.blueprint`
+1. If you do not want to rotate the model during animation, generate a lovely high-quality 100-frame render by running `lego-animate -i myfile.pov -q1 -aa true -w800 -h600 -f100 instructions.blueprint`
    1. Make an entire jug of tea
-1. If you do want to rotate the model, generate a low-quality animation by running `animate myfile.pov -q1 -w200 -h100 -f50 instructions.blueprint -r720 -e540`. This will rotate the model by 720 degrees during the build, and finish the actual building at 540 degrees
+1. If you do want to rotate the model, generate a low-quality animation by running `lego-animate myfile.pov -q1 -w200 -h100 -f50 instructions.blueprint -r720 -e540`. This will rotate the model by 720 degrees during the build, and finish the actual building at 540 degrees
 1. Render this in POV-Ray. If the model twirls in an odd way on its axis, move it around a bit in LDD and go back to step ???
-1. If this looks good, generate a high quality 250 frame render by using something like `animate myfile.pov -q1 -w800 -h600 -f250 -r720 -aa true -e540 instructions.blueprint`
+1. If this looks good, generate a high quality 250 frame render by using something like `lego-animate myfile.pov -q1 -w800 -h600 -f250 -r720 -aa true -e540 instructions.blueprint`
 1. Render this in POV-Ray
    1. Make tea for your entire neighbourhood and distribute it
 1. Once you're happy with the PNG files, combine them into a video. To do this using VirtualDub:
@@ -67,12 +67,12 @@ This is my recommend sequence of steps.
    1. Select Video..Compression and select Xvid MPEG-4 Codec
    1. Hit File..Save as AVI
 1. Impress your friends
-1. To make a truly gorgeous 4k 1000-frame version of your render, try `animate myfile.pov -q1 -w3840 -h2160 -f1000 -r720 -aa true -e540`
+1. To make a truly gorgeous 4k 1000-frame version of your render, try `lego-animate myfile.pov -q1 -w3840 -h2160 -f1000 -r720 -aa true -e540`
    1. Buy a tea plantation and start growing tea plants on it
 
 # Command Line Options
 
-The following options are available (just run `animator` without any parameters to see this list):
+The following options are available (just run `lego-animate` without any parameters to see this list):
 
 ```
   -i, --input         Required. Input POV file.

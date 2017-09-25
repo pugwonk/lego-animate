@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Animator")]
+[assembly: AssemblyTitle("Lego-Animate")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Animator")]
+[assembly: AssemblyProduct("Lego-Animate")]
 [assembly: AssemblyCopyright("Copyright © Chris Rae 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

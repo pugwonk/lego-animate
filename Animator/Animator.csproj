@@ -7,7 +7,7 @@
     <ProjectGuid>{ECF13B38-5984-4508-8DA3-49C537B12075}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Animator</RootNamespace>
-    <AssemblyName>Animator</AssemblyName>
+    <AssemblyName>Lego-Animate</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
