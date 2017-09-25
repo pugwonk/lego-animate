@@ -108,6 +108,7 @@ This only applies where you're not using BluePrint to generate the build order. 
 * Bear in mind that each frame is likely going to be slower to render than the previous one, as there are more parts in it.
 * If you opted to rotate the model, it might rotate around a rather strange axis. Open the original `.pov` file created by LDD to POV-Ray and look for the line `#declare ldd_model_transformation = transform { translate <0,0,0> }`. Those numbers are distances to move the model on the X, Y and Z axes. Try adjusting the first two of them (I'd suggest by numbers less than 10) to see where the thing ends up, and rerun the animation. I need to find a better way to do this, but haven't yet.
 * Transparent parts (windows, the little 1x1 coloured transparent pieces, etc) will increase your rendering time horribly. Horribly. I mean, adding one light to your car might make it take ten times as long to render. This is due to the light behaving in complicated ways through these, and there's not a lot you can do about it.
+* The "ground plane" under the model seems to follow it - this means that extending the model downwards during a build will make for some moving shadows. You'll see what I mean when I see it.
 
 # Things That Might Go Wrong
 
