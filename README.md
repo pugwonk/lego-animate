@@ -6,7 +6,7 @@ This program takes files created by the LDD to POV-Ray and converts them into bu
 * An LXF file from LDD containing the model you want to render
 * the [LDD to POV-Ray Converter](http://ldd2povray.lddtools.com/) (remember to reboot after installing this)
 * This program (download the executable here XXXX)
-* (Optional) [BluePrint](https://www.eurobricks.com/forum/index.php?/forums/topic/108346-software-blueprint-a-building-instruction-generator-for-ldd/)
+* (Optional) [BluePrint](https://www.eurobricks.com/forum/index.php?/forums/topic/108346-software-blueprint-a-building-instruction-generator-for-ldd/) (it's a program for generating instructions from LXFs, and can optionally be used to generate the build order for the animation)
 * Some way of turning many picture files into a video (I used [VirtualDub](http://virtualdub.org/))
 
 If you are an impatient sort, you can jump straight to the [Running It](#running-it) section. But, I warn you, you're going to have things go wrong that I'm about to describe in earlier sections and after a week or two of your computer rendering the thing you're going to discover it doesn't look right.
@@ -105,6 +105,8 @@ This only applies where you're not using BluePrint to generate the build order. 
 # Hints and Tips
 
 * If you're intending using the computer for other things at the same time as the rendering, in POV-Ray select Render..Render Priority and set it to Background. As otherwise the mouse stops moving every so often and it's rather annoying. It will still use 100% of CPU when it can.
+* Bear in mind that each frame is likely going to be slower to render than the previous one, as there are more parts in it.
+* If you opted to rotate the model, it might rotate around a rather strange axis. Open the original `.pov` file created by LDD to POV-Ray and look for the line `#declare ldd_model_transformation = transform { translate <0,0,0> }`. Those numbers are distances to move the model on the X, Y and Z axes. Try adjusting the first two of them (I'd suggest by numbers less than 10) to see where the thing ends up, and rerun the animation. I need to find a better way to do this, but haven't yet.
 
 # Things That Might Go Wrong
 
