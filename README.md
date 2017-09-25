@@ -18,12 +18,18 @@ There are two ways to pick the build order. Probably the best one (and my origin
 In the examples below I'm not using a MOC of mine - these are renders of the very nice [Joe's Cantina](https://rebrickable.com/mocs/MOC-2618/Berth/joes-cantina) by Bertha.
 
 Here's an example of a build order built in BlueRender:
+
+[![video1](http://img.youtube.com/vi/zyycmcgqiJA/0.jpg)](http://www.youtube.com/watch?v=zyycmcgqiJA)
+
 And here's the same model with the original LDD build order:
+
+[![video1](http://img.youtube.com/vi/zyycmcgqiJA/0.jpg)](http://www.youtube.com/watch?v=zyycmcgqiJA)
 
 You can see that there are some artifacts in the wrong place when using the LDD order - as these were the first pieces placed, it was easy to track them down and just correct the order.
 
 Here's that model with some pieces manually fudged to be later in the order:
-And finally here's that with rotation turned on:
+
+[![video1](http://img.youtube.com/vi/zyycmcgqiJA/0.jpg)](http://www.youtube.com/watch?v=zyycmcgqiJA)
 
 As you can see, using the LDD order is a bit more attractive but won't work well for models that have been tweaked a lot in LDD.
 
