@@ -19,7 +19,7 @@ In the examples below I'm not using a MOC of mine - these are renders of the ver
 
 Here's an example of a build order built in BlueRender:
 
-[![video1](http://img.youtube.com/vi/zyycmcgqiJA/0.jpg)](http://www.youtube.com/watch?v=zyycmcgqiJA)
+![BlueRender build order](https://github.com/pugwonk/lego-animate/raw/master/samples/run001.gif "Logo Title Text 1")
 
 And here's the same model with the original LDD build order:
 
