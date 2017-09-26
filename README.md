@@ -5,6 +5,7 @@ This program takes files created by the LDD to POV-Ray and converts them into bu
 * [Lego Digital Designer](http://ldd.lego.com/en-us/)
 * An LXF file from LDD containing the model you want to render
 * the [LDD to POV-Ray Converter](http://ldd2povray.lddtools.com/) (remember to reboot after installing this)
+* [POV-Ray](http://www.povray.org/download/)
 * This program (download here: [lego-animate.exe](https://github.com/pugwonk/lego-animate/releases/download/1.0.0.0/lego-animate.exe))
 * (Optional) [BluePrint](https://www.eurobricks.com/forum/index.php?/forums/topic/108346-software-blueprint-a-building-instruction-generator-for-ldd/) (it's a program for generating instructions from LXFs, and can optionally be used to generate the build order for the animation)
 * Some way of turning many picture files into a video (I used [VirtualDub](http://virtualdub.org/))
