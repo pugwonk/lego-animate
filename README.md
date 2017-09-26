@@ -19,17 +19,17 @@ In the examples below I'm not using a MOC of mine - these are renders of the ver
 
 Here's an example of a build order built in BlueRender:
 
-![BlueRender build order](https://github.com/pugwonk/lego-animate/raw/master/samples/run001.gif "Logo Title Text 1")
+![BlueRender build order](https://github.com/pugwonk/lego-animate/raw/master/samples/run001.gif)
 
 And here's the same model with the original LDD build order:
 
-[![video1](http://img.youtube.com/vi/zyycmcgqiJA/0.jpg)](http://www.youtube.com/watch?v=zyycmcgqiJA)
+![LDD build order](https://github.com/pugwonk/lego-animate/raw/master/samples/run001.gif)
 
 You can see that there are some artifacts in the wrong place when using the LDD order - as these were the first pieces placed, it was easy to track them down and just correct the order.
 
 Here's that model with some pieces manually fudged to be later in the order:
 
-[![video1](http://img.youtube.com/vi/zyycmcgqiJA/0.jpg)](http://www.youtube.com/watch?v=zyycmcgqiJA)
+![LDD build order](https://github.com/pugwonk/lego-animate/raw/master/samples/run001.gif)
 
 As you can see, using the LDD order is a bit more attractive but won't work well for models that have been tweaked a lot in LDD.
 
