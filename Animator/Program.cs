@@ -10,6 +10,7 @@ using System.Data;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Reflection;
 
 namespace Animator
 {
@@ -103,29 +104,35 @@ namespace Animator
         {
             string fileName = options.inPov.ToLower().Replace(".pov", "-anim.ini");
             Console.WriteLine("Creating INI " + fileName);
-            string line;
+
             var sb = new StringBuilder();
-            System.IO.StreamReader file = new System.IO.StreamReader("../../template.ini");
-            while ((line = file.ReadLine()) != null)
+            var assembly = Assembly.GetExecutingAssembly();
+            using (Stream template = assembly.GetManifestResourceStream("Animator.template.ini")) 
             {
-                if (line.Equals("Final_Frame="))
-                    line += options.frameCount.ToString();
-                if (line.Equals("Final_Clock="))
-                    line += options.degreeSpin.ToString();
-                if (line.Equals("Width="))
-                    line += options.imgWidth.ToString();
-                if (line.Equals("Height="))
-                    line += options.imgHeight.ToString();
-                if (line.Equals("Antialias="))
-                    line += (options.useAA ? "Yes" : "No");
-                if (line.Equals("Quality="))
-                    line += options.quality.ToString();
-                if (line.Equals("Input_File_Name="))
-                    line += options.inPov.ToLower().Replace(".pov", "-anim.pov");
-                sb.AppendLine(line);
+                using (StreamReader getFile = new StreamReader(template))
+                {
+                    string line;
+                    while ((line = getFile.ReadLine()) != null)
+                    {
+                        if (line.Equals("Final_Frame="))
+                            line += options.frameCount.ToString();
+                        if (line.Equals("Final_Clock="))
+                            line += options.degreeSpin.ToString();
+                        if (line.Equals("Width="))
+                            line += options.imgWidth.ToString();
+                        if (line.Equals("Height="))
+                            line += options.imgHeight.ToString();
+                        if (line.Equals("Antialias="))
+                            line += (options.useAA ? "Yes" : "No");
+                        if (line.Equals("Quality="))
+                            line += options.quality.ToString();
+                        if (line.Equals("Input_File_Name="))
+                            line += options.inPov.ToLower().Replace(".pov", "-anim.pov");
+                        sb.AppendLine(line);
+                    }
+                }
             }
 
-            file.Close();
             using (System.IO.StreamWriter files = new System.IO.StreamWriter(fileName))
             {
                 files.WriteLine(sb.ToString());
@@ -141,62 +148,63 @@ namespace Animator
             int dumpUnions = 0;
             bool ignoreLine;
             var sb = new StringBuilder();
-            System.IO.StreamReader file = new System.IO.StreamReader(options.inPov);
-            while ((line = file.ReadLine()) != null)
+            using (StreamReader file = new System.IO.StreamReader(options.inPov))
             {
-                //if (line.Equals("#declare ldd_model_transformation = transform { translate <0,0,0> }"))
-                //    line = "#declare ldd_model_transformation = transform { translate <2,1,1> }";
-                if (line.Equals("#declare ldd_model = union {"))
-                    onItem = 0;
-                ignoreLine = false;
-                if (line.Trim().Equals("union {"))
-                { // it's an unnecessary union that LDD to POV-Ray made
-                    dumpUnions++;
-                    ignoreLine = true;
-                }
-                if (line.Equals("}"))
+                while ((line = file.ReadLine()) != null)
                 {
-                    if (onItem > -1)
+                    //if (line.Equals("#declare ldd_model_transformation = transform { translate <0,0,0> }"))
+                    //    line = "#declare ldd_model_transformation = transform { translate <2,1,1> }";
+                    if (line.Equals("#declare ldd_model = union {"))
+                        onItem = 0;
+                    ignoreLine = false;
+                    if (line.Trim().Equals("union {"))
+                    { // it's an unnecessary union that LDD to POV-Ray made
+                        dumpUnions++;
+                        ignoreLine = true;
+                    }
+                    if (line.Equals("}"))
                     {
-                        if (dumpUnions > 0)
+                        if (onItem > -1)
                         {
-                            dumpUnions--;
-                            ignoreLine = true;
+                            if (dumpUnions > 0)
+                            {
+                                dumpUnions--;
+                                ignoreLine = true;
+                            }
+                            else
+                            {
+                                if (options.degreeSpin != 0)
+                                    sb.AppendLine("rotate <0,clock,0>");
+                                onItem = -1;
+                            }
                         }
-                        else
+                    }
+                    if (!ignoreLine)
+                    {
+                        if (onItem > 0)
                         {
+                            // Find where this item appears in the ordered list
+                            int itemTiming = itemIds.FindIndex(a => a.Equals(onItem - 1));
+                            if (itemTiming == -1)
+                                break;
+                            sb.AppendLine("// Item " + onItem.ToString() + ", index " + itemTiming.ToString());
                             if (options.degreeSpin != 0)
-                                sb.AppendLine("rotate <0,clock,0>");
-                            onItem = -1;
+                                sb.AppendLine("#if(clock >= " + (itemTiming * ((double)options.finishBuildDegree / itemIds.Count)).ToString() + ")");
+                            else
+                                sb.AppendLine("#if(frame_number >= " + (itemTiming * ((double)options.frameCount / itemIds.Count)).ToString() + ")");
+                            sb.AppendLine(line);
+                            sb.AppendLine("#end");
                         }
-                    }
-                }
-                if (!ignoreLine)
-                {
-                    if (onItem > 0)
-                    {
-                        // Find where this item appears in the ordered list
-                        int itemTiming = itemIds.FindIndex(a => a.Equals(onItem - 1));
-                        if (itemTiming == -1)
-                            break;
-                        sb.AppendLine("// Item " + onItem.ToString() + ", index " + itemTiming.ToString());
-                        if (options.degreeSpin != 0)
-                            sb.AppendLine("#if(clock >= " + (itemTiming * ((double)options.finishBuildDegree / itemIds.Count)).ToString() + ")");
                         else
-                            sb.AppendLine("#if(frame_number >= " + (itemTiming * ((double)options.frameCount / itemIds.Count)).ToString() + ")");
-                        sb.AppendLine(line);
-                        sb.AppendLine("#end");
+                        {
+                            sb.AppendLine(line);
+                        }
+                        if (onItem != -1)
+                            onItem++;
                     }
-                    else
-                    {
-                        sb.AppendLine(line);
-                    }
-                    if (onItem != -1)
-                        onItem++;
                 }
             }
 
-            file.Close();
             using (System.IO.StreamWriter files = new System.IO.StreamWriter(fileName))
             {
                 files.WriteLine(sb.ToString());
