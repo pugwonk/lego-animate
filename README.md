@@ -18,25 +18,21 @@ There are two ways to pick the build order. Probably the best one (and my origin
 
 In the examples below I'm not using a MOC of mine - these are renders of the very nice [Joe's Cantina](https://rebrickable.com/mocs/MOC-2618/Berth/joes-cantina) by Bertha.
 
-Here's an example of a build order built in BlueRender:
+Here's an example of a build order built in BluePrint:
 
-![BlueRender build order](https://github.com/pugwonk/lego-animate/raw/master/samples/bluerender.gif)
+![BluePrint build order](https://github.com/pugwonk/lego-animate/raw/master/samples/blueprint.gif)
 
 And here's the same model with the original LDD build order:
 
-![LDD build order](https://github.com/pugwonk/lego-animate/raw/master/samples/run001.gif)
+![LDD original build order](https://github.com/pugwonk/lego-animate/raw/master/samples/ldd-original.gif)
 
 You can see that there are some artifacts in the wrong place when using the LDD order - as these were the first pieces placed, it was easy to track them down and just correct the order.
 
 Here's that model with some pieces manually fudged to be later in the order:
 
-![LDD build order](https://github.com/pugwonk/lego-animate/raw/master/samples/ldd-fixed.gif)
+![LDD fixed build order](https://github.com/pugwonk/lego-animate/raw/master/samples/ldd-fixed.gif)
 
-As you can see, using the LDD order is a bit more attractive but won't work well for models that have been tweaked a lot in LDD.
-
-# Rotation
-
-My converter can ask POV-Ray to rotate the model while it's being built. See [Command Line Options](#command-line-options) for more info.
+As you can see, using the LDD order is a bit more attractive but won't work well for models that have been tweaked a lot in LDD. You can edit the build order in BluePrint - if you do that, I think my program will respect it.
 
 # Running It
 
