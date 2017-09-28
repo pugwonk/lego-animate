@@ -36,7 +36,16 @@ As you can see, using the LDD order is a bit more attractive but won't work well
 
 # Running It
 
-This is my recommend sequence of steps.
+The sequence of events is broadly:
+
+1. Generate POV and INI files using LDD to POV-Ray
+2. Run those through lego-animate to generate the *-anim.ini and *-anim.pov files
+3. Render those in POV-Ray
+4. Turn the PNGs POV-Ray created into a video
+
+# Suggested Step-by-Step
+
+In real life, running this takes a few tries to get things right, and rendering takes a long time. So this is my recommend sequence of steps:
 
 1. Install everything listed in the [Introduction](#introduction)
 1. Run Windows Update on your computer. Because it's going to be on for a long time, and you don't want it forcing a reboot. Ask me how I know
