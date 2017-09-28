@@ -19,7 +19,7 @@ In the examples below I'm not using a MOC of mine - these are renders of the ver
 
 Here's an example of a build order built in BlueRender:
 
-![BlueRender build order](https://github.com/pugwonk/lego-animate/raw/master/samples/run001.gif)
+![BlueRender build order](https://github.com/pugwonk/lego-animate/raw/master/samples/bluerender.gif)
 
 And here's the same model with the original LDD build order:
 
@@ -29,7 +29,7 @@ You can see that there are some artifacts in the wrong place when using the LDD 
 
 Here's that model with some pieces manually fudged to be later in the order:
 
-![LDD build order](https://github.com/pugwonk/lego-animate/raw/master/samples/run001.gif)
+![LDD build order](https://github.com/pugwonk/lego-animate/raw/master/samples/ldd-fixed.gif)
 
 As you can see, using the LDD order is a bit more attractive but won't work well for models that have been tweaked a lot in LDD.
 
@@ -72,6 +72,7 @@ This is my recommend sequence of steps.
    1. Select Video..Frame Rate and select a frame rate that will work (10fps isn't too bad - 25fps looks lovely but bear in mind your 250 frame video will last 10 seconds)
    1. Select Video..Compression and select Xvid MPEG-4 Codec
    1. Hit File..Save as AVI
+   1. If you're having trouble getting the output videos to run on things, you may want to convert them to MP4. The easiest way I found to do this was [this handy online converter](https://video.online-convert.com/convert-to-mp4)
 1. Impress your friends
 1. To make a truly gorgeous 4k 1000-frame version of your render, try `lego-animate -i myfile.pov -q1 -w3840 -h2160 -f1000 -r720 -a true -e540`
    1. Buy a tea plantation and start growing tea plants on it
