@@ -16,7 +16,7 @@ If you are an impatient sort, you can jump straight to the [Running It](#running
 
 There are two ways to pick the build order. Probably the best one (and my original idea) is to generate some instructions with BluePrint, and draw the pieces in the order suggested by BluePrint. However, while messing around with this I discovered that LDD actually orders the parts as you draw them in the designer. So we can just steal that order. It's not perfect - if you delete a piece and add another one, the new one gets plopped in the order position of the original, so it can go out of sync easily.
 
-In the examples below I'm not using a MOC of mine - these are renders of the very nice [Joe's Cantina](https://rebrickable.com/mocs/MOC-2618/Berth/joes-cantina) by Bertha.
+In the examples below I'm not using a MOC of mine - these are renders of the very nice [Joe's Cantina](https://rebrickable.com/mocs/MOC-2618/Berth/joes-cantina) by Berth.
 
 Here's an example of a build order built in BluePrint:
 
