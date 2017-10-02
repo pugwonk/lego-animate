@@ -32,7 +32,7 @@ Here's that model with some pieces manually fudged to be later in the order:
 
 ![LDD fixed build order](https://github.com/pugwonk/lego-animate/raw/master/samples/ldd-fixed.gif)
 
-As you can see, using the LDD order is a bit more attractive but won't work well for models that have been tweaked a lot in LDD. You can edit the build order in BluePrint - if you do that, I think my program will respect it.
+As you can see, using the LDD order is a bit more attractive but won't work well for models that have been tweaked a lot in LDD.
 
 # Running It
 
@@ -112,6 +112,8 @@ The following options are available (just run `lego-animate` without any paramet
 ```
 
 # Manually Editing Build Order
+
+Do not edit the build order inside the BluePrint app! It will not be respected (I rely on some rather ephemeral item IDs happening to be the same, and if you change the build order BluePrint changes them all).
 
 This only applies where you're not using BluePrint to generate the build order. If you look inside the `.pov` file created by LDD to POV-Ray, you'll see a line reading `#declare ldd_model = union {` and then all of the elements in their build order. You can just move them around (and then rerun this program) to modify that order. Each element is named `ldd_something` where `something` is the ID of the brick being used. The easiest way to find out which is which is to load up LDD and search for that brick ID. I never said this was going to be easy. Remember not to run LDD to POV-Ray again though, as it will zap your carefully crafted changes.
 
